@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "config": "ts-node set-env.ts",
+    "mock": "cd ./mock && ts-node ./mock_car.ts",
     "start": "npm run config && ng serve",
     "build": "npm run config && ng build",
     "test": "npm run config && ng test",
@@ -21,6 +22,7 @@
     "@angular/platform-browser-dynamic": "~10.1.2",
     "@angular/router": "~10.1.2",
     "d3": "^6.1.1",
+    "flv.js": "^1.5.0",
     "mqtt": "^4.2.1",
     "ngx-mqtt": "^7.0.14",
     "rxjs": "~6.6.0",
@@ -44,6 +46,7 @@
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
+    "line-by-line": "^0.1.6",
     "protractor": "~7.0.0",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",

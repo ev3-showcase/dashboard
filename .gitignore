@@ -47,4 +47,4 @@ Thumbs.db
 
 .env
 environments
-mock
+mock/data
