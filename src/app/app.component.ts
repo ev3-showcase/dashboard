@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component } from '@angular/core';
 import * as d3 from 'd3';
 import { scaleLinear } from 'd3';
@@ -32,20 +31,6 @@ export class AppComponent implements AfterViewInit {
     this.subscriptions.forEach((element) => {
       element.unsubscribe();
     });
-  }
-
-  public lidarmock() {
-    if (this.mockData[this.mockCounter] == undefined) {
-      this.mockCounter = 0;
-    }
-    this.unsafePublish(
-      'stats/lidar',
-      this.mockData[this.mockCounter].toString()
-    );
-    this.mockCounter++;
-    setTimeout(() => {
-      this.lidarmock();
-    }, 40);
   }
 
   public subscribeToDevice(id?: string) {
@@ -153,17 +138,7 @@ export class AppComponent implements AfterViewInit {
         this.ipAddress = message.payload.toString();
       });
   }
-  constructor(
-    private mqttService: MqttService,
-    private httpClient: HttpClient
-  ) {
-    this.httpClient
-      .get('assets/mock/lidar_data.json')
-      .subscribe((data: any) => {
-        this.mockData = data;
-        // this.lidarmock();
-      });
-  }
+  constructor(private mqttService: MqttService) {}
   ngAfterViewInit(): void {
     this.subscribeToDevice(this.selectedDeviceId);
   }

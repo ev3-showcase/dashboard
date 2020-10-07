@@ -8,6 +8,7 @@ dotenv.config();
 const envConfigFile = `export const environment = {
    mqtt_hostname: '${process.env.MQTT_HOSTNAME || 'broker.mqttdashboard.com'}',
    mqtt_port: ${process.env.MQTT_PORT || 8000},
+   video_api: '${process.env.VIDEO_API || 'http://localhost:8000/live/'}',
    production: ${process.env.PRODUCTION || true}
 };
 `;
