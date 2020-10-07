@@ -1,0 +1,9 @@
+<select [(value)]="selectedDeviceId" (change)="selectChanged($event)">
+    <option *ngFor="let option of deviceList" [value]="option">{{option}}</option>
+</select>
+
+<div>Ip Address: {{ipAddress}} </div>
+<div id="test"></div>
+
+
+<div *ngFor="let logLine of logLines">{{logLine}}</div>
