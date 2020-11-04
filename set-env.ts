@@ -10,9 +10,14 @@ console.log(`File Path: ${__dirname}`);
 process.chdir(__dirname);
 console.log('Files: ');
 
-fs.readdirSync(__dirname).forEach((file) => {
+fs.mkdirSync('./src/environments', { recursive: true }, (err) => {
+  if (err) throw err;
+});
+
+fs.readdirSync('./src').forEach((file) => {
   console.log(file);
 });
+
 // `environment.ts` file structure
 const envConfigFile = `export const environment = {
    mqtt_hostname: '${process.env.MQTT_HOSTNAME || 'broker.mqttdashboard.com'}',
@@ -25,9 +30,7 @@ console.log(
   `The file 'environment.ts' ( ${targetPath} ) will be written with the following content: \n`
 );
 console.log(envConfigFile);
-fs.mkdir('./src/environments', { recursive: true }, (err) => {
-  if (err) throw err;
-});
+
 fs.writeFile(targetPath, envConfigFile, function (err) {
   if (err) {
     throw console.error(err);
