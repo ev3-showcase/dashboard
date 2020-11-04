@@ -13,7 +13,7 @@ const envConfigFile = `export const environment = {
 };
 `;
 console.log(
-  'The file `environment.ts` will be written with the following content: \n'
+  `The file 'environment.ts' ( ${targetPath} ) will be written with the following content: \n`
 );
 console.log(envConfigFile);
 fs.mkdir('./src/environments', { recursive: true }, (err) => {
