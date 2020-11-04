@@ -5,8 +5,7 @@ var mqtt = require('mqtt');
 /**
  * MQTT Setup
  */
-var connectionString =
-  'ws://' + environment.mqtt_hostname + ':' + environment.mqtt_port + '/mqtt';
+var connectionString = 'ws://' + environment.mqtt_hostname + ':' + 80 + '/mqtt';
 console.log('Trying to connect to: ' + connectionString);
 var client = mqtt.connect(connectionString);
 let mockCounter = 0;

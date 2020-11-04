@@ -18,8 +18,9 @@ import { RoundtripComponent } from './roundtrip/roundtrip.component';
 
 export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
   hostname: environment.mqtt_hostname,
-  port: environment.mqtt_port,
+  port: 443,
   path: '/mqtt',
+  protocol: 'wss',
 };
 
 @NgModule({
