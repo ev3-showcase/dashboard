@@ -4,15 +4,40 @@
     <img id="claim" src="assets/t-systems-claim.svg">
 </mat-toolbar>
 
-<div>Ip Address: {{ipAddress}} </div>
-
-<div class="roundtrip">
-
-    MQTT Roundtrip: <app-roundtrip></app-roundtrip>
-</div>
-
-<app-video-player></app-video-player>
-
-<!-- <app-connected-scatter-plot [points]="points"></app-connected-scatter-plot> -->
-
-<div *ngFor="let logLine of logLines">{{logLine}}</div>
+<mat-grid-list cols="2" rowHeight="3:1">
+    <mat-grid-tile>
+        <mat-card>
+            <mat-card-title>Info</mat-card-title>
+            <mat-card-content>
+                <div>Ip Address: {{ipAddress}} </div>
+                <div class="roundtrip">
+                    MQTT Roundtrip: <app-roundtrip></app-roundtrip>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <mat-card>
+            <mat-card-title>Live-Video</mat-card-title>
+            <mat-card-content>
+                <!-- <app-video-player></app-video-player> -->
+            </mat-card-content>
+        </mat-card>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <mat-card>
+            <mat-card-title>Log</mat-card-title>
+            <mat-card-content>
+                <div *ngFor="let logLine of logLines">{{logLine}}</div>
+            </mat-card-content>
+        </mat-card>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <mat-card>
+            <mat-card-title>Lidar</mat-card-title>
+            <mat-card-content>
+                <!-- <app-connected-scatter-plot [points]="points"></app-connected-scatter-plot> -->
+            </mat-card-content>
+        </mat-card>
+    </mat-grid-tile>
+</mat-grid-list>
