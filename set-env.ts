@@ -8,6 +8,11 @@ dotenv.config();
 console.log(`Working Dir: ${process.cwd()}`);
 console.log(`File Path: ${__dirname}`);
 process.chdir(__dirname);
+console.log('Files: ');
+
+fs.readdirSync(__dirname).forEach((file) => {
+  console.log(file);
+});
 // `environment.ts` file structure
 const envConfigFile = `export const environment = {
    mqtt_hostname: '${process.env.MQTT_HOSTNAME || 'broker.mqttdashboard.com'}',
