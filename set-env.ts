@@ -4,6 +4,10 @@ const targetPath = './src/environments/environment.ts';
 // Load node modules
 const dotenv = require('dotenv');
 dotenv.config();
+
+console.log(`Working Dir: ${process.cwd()}`);
+console.log(`File Path: ${__dirname}`);
+process.chdir(__dirname);
 // `environment.ts` file structure
 const envConfigFile = `export const environment = {
    mqtt_hostname: '${process.env.MQTT_HOSTNAME || 'broker.mqttdashboard.com'}',
