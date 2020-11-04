@@ -16,6 +16,9 @@ console.log(
   'The file `environment.ts` will be written with the following content: \n'
 );
 console.log(envConfigFile);
+fs.mkdir('./src/environments', { recursive: true }, (err) => {
+  if (err) throw err;
+});
 fs.writeFile(targetPath, envConfigFile, function (err) {
   if (err) {
     throw console.error(err);
