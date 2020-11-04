@@ -49,7 +49,7 @@ function mockLidar() {
 
     setTimeout(function () {
       lr.resume();
-    }, 40);
+    }, 20);
   });
 
   lr.on('end', function () {

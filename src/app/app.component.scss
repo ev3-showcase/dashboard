@@ -1,0 +1,17 @@
+@import "../colors.scss";
+
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  img {
+    margin: 10px;
+  }
+}

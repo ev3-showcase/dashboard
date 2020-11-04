@@ -1,8 +1,8 @@
 import { AfterViewInit, Component } from '@angular/core';
-import * as d3 from 'd3';
-import { scaleLinear } from 'd3';
+import { Store } from '@ngxs/store';
 import { IMqttMessage, MqttService } from 'ngx-mqtt';
 import { Subscription } from 'rxjs';
+import { AppState } from 'src/app/state/app.state';
 
 @Component({
   selector: 'app-root',
@@ -10,14 +10,12 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements AfterViewInit {
-  public deviceList = ['car-bdsp', 'car-cloudhub'];
   private subscriptions: Subscription[] = [];
   public message: string;
   public logLines = [];
   public ipAddress = '';
-  public mockCounter = 0;
-  public mockData = [];
-  public selectedDeviceId = this.deviceList[0];
+  public points = [];
+  public stagedPoints = [];
 
   public unsafePublish(topic: string, message: string): void {
     this.mqttService.unsafePublish(topic, message, { qos: 1, retain: true });
@@ -41,84 +39,19 @@ export class AppComponent implements AfterViewInit {
       id = '';
     }
 
-    let points = [];
-    var width = 300,
-      height = 300,
-      radius = Math.min(width, height) / 2 - 30;
-    var r = scaleLinear().domain([0, 1]).range([0, radius]);
-    var line = d3
-      .lineRadial()
-      .radius(function (d) {
-        return r(d[1]);
-      })
-      .angle(function (d) {
-        return -d[0] + Math.PI / 2;
-      });
-    var svg = d3
-      .select('#test')
-      .append('svg')
-      .attr('width', width)
-      .attr('height', height)
-      .append('g')
-      .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
-    var gr = svg
-      .append('g')
-      .attr('class', 'r axis')
-      .selectAll('g')
-      .data(r.ticks(3).slice(1))
-      .enter()
-      .append('g');
-    gr.append('circle').attr('r', r);
-    var ga = svg
-      .append('g')
-      .attr('class', 'a axis')
-      .selectAll('g')
-      .data(d3.range(0, 360, 30))
-      .enter()
-      .append('g')
-      .attr('transform', function (d) {
-        return 'rotate(' + -d + ')';
-      });
-    ga.append('line').attr('x2', radius);
-    var color = d3.scaleOrdinal(d3.schemeCategory10);
-    var line = d3
-      .lineRadial()
-      .radius(function (d) {
-        return r(d[1]);
-      })
-      .angle(function (d) {
-        return -d[0] + Math.PI / 2;
-      });
-
     this.subscriptions.push(
       this.mqttService
         .observe(id + 'stats/lidar')
         .subscribe((message: IMqttMessage) => {
           let messageLine = message.payload.toString().split(',');
-          points.push([
+          this.stagedPoints.push([
             Number.parseFloat(messageLine[2]) * (Math.PI / 180),
             Number.parseFloat(messageLine[3]) / 10000,
           ]);
 
-          if (points.length >= 600) {
-            svg.selectAll('circle').remove();
-            svg
-              .selectAll('point')
-              .data(points)
-              .enter()
-              .append('circle')
-              .attr('class', 'point')
-              .attr('transform', function (d) {
-                // get angle and radius
-                var an = d[0],
-                  ra = r(d[1]),
-                  x = ra * Math.cos(an),
-                  y = ra * Math.sin(an);
-                return 'translate(' + [x, y] + ')';
-              })
-              .attr('r', 2)
-              .attr('fill', 'grey');
-            points = [];
+          if (this.points.length >= 600) {
+            this.points = this.stagedPoints;
+            this.stagedPoints = [];
           }
         })
     );
@@ -138,13 +71,8 @@ export class AppComponent implements AfterViewInit {
         this.ipAddress = message.payload.toString();
       });
   }
-  constructor(private mqttService: MqttService) {}
+  constructor(private mqttService: MqttService, private store: Store) {}
   ngAfterViewInit(): void {
-    this.subscribeToDevice(this.selectedDeviceId);
-  }
-
-  public selectChanged(event: any) {
-    this.subscribeToDevice(event.target.value);
-    this.selectedDeviceId = event.target.value;
+    this.subscribeToDevice(this.store.selectSnapshot(AppState.state).device);
   }
 }

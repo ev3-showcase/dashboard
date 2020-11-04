@@ -1,0 +1,11 @@
+<button mat-raised-button [matMenuTriggerFor]="menu">
+    {{selectedDeviceId}}
+</button>
+<mat-menu #menu="matMenu">
+    <button mat-menu-item *ngFor="let option of deviceList" (click)="selectChanged(option)"
+        [disabled]="selectedDeviceId === option">
+        <span>
+            {{option}}
+        </span>
+    </button>
+</mat-menu>

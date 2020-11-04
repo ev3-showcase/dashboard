@@ -1,11 +1,18 @@
-<select [(value)]="selectedDeviceId" (change)="selectChanged($event)">
-    <option *ngFor="let option of deviceList" [value]="option">{{option}}</option>
-</select>
+<mat-toolbar [color]="'primary'" id="toolbar">
+    <img src="assets/t-systems-logo.svg">
+    <app-device-selector></app-device-selector>
+    <img id="claim" src="assets/t-systems-claim.svg">
+</mat-toolbar>
 
 <div>Ip Address: {{ipAddress}} </div>
 
-<app-video-player></app-video-player>
-<div id="test"></div>
+<div class="roundtrip">
 
+    MQTT Roundtrip: <app-roundtrip></app-roundtrip>
+</div>
+
+<app-video-player></app-video-player>
+
+<!-- <app-connected-scatter-plot [points]="points"></app-connected-scatter-plot> -->
 
 <div *ngFor="let logLine of logLines">{{logLine}}</div>
