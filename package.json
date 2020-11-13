@@ -25,6 +25,7 @@
     "@angular/router": "~10.1.2",
     "@ngxs/logger-plugin": "^3.7.0",
     "@ngxs/store": "^3.7.0",
+    "@swimlane/ngx-charts": "^16.0.0",
     "d3": "^6.1.1",
     "flv.js": "^1.5.0",
     "mqtt": "^4.2.1",

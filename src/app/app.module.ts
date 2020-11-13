@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsModule } from '@ngxs/store';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { IMqttServiceOptions, MqttModule } from 'ngx-mqtt';
 import { MaterialModule } from 'src/app/material.module';
 import { AppState } from 'src/app/state/app.state';
@@ -15,7 +16,7 @@ import { AppComponent } from './app.component';
 import { DeviceSelectorComponent } from './device-selector/device-selector.component';
 import { LogStreamComponent } from './log-stream/log-stream.component';
 import { RoundtripComponent } from './roundtrip/roundtrip.component';
-
+import { ChartLogComponent } from './chart-log/chart-log.component';
 export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
   hostname: environment.mqtt_hostname,
   port: 443,
@@ -31,6 +32,7 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     RoundtripComponent,
     DeviceSelectorComponent,
     LogStreamComponent,
+    ChartLogComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,6 +45,7 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     }),
     MqttModule.forRoot(MQTT_SERVICE_OPTIONS),
     HttpClientModule,
+    NgxChartsModule,
     BrowserAnimationsModule,
     MaterialModule,
   ],

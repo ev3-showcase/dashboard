@@ -2,7 +2,8 @@ import { AfterViewInit, Component } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { IMqttMessage, MqttService } from 'ngx-mqtt';
 import { Subscription } from 'rxjs';
-import { AppState } from 'src/app/state/app.state';
+import { converLogLine } from 'src/app/helper';
+import { AppendLog, AppState } from 'src/app/state/app.state';
 
 @Component({
   selector: 'app-root',
@@ -72,6 +73,7 @@ export class AppComponent implements AfterViewInit {
         let line = message.payload.toString().split(',');
         console.log(line);
         this.logLines.push(line);
+        this.store.dispatch(new AppendLog(converLogLine(line)));
         if (this.logLines.length > 60) [this.logLines.shift()];
       });
 
