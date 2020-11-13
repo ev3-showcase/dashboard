@@ -16,6 +16,8 @@ import { scaleLinear } from 'd3';
 export class ConnectedScatterPlotComponent implements AfterViewInit, OnChanges {
   @Input()
   points: any[];
+  @Input()
+  maxScale: number = 1;
   svg = null;
   width = 500;
   height = 500;
@@ -87,8 +89,8 @@ export class ConnectedScatterPlotComponent implements AfterViewInit, OnChanges {
   }
 
   updateGraph() {
-    this.svg.selectAll('point').remove();
-    var r = scaleLinear().domain([0, 1]).range([0, this.radius]);
+    this.svg.selectAll('.point').remove();
+    var r = scaleLinear().domain([0, this.maxScale]).range([0, this.radius]);
 
     this.svg
       .selectAll('point')

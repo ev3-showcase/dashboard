@@ -15,6 +15,8 @@ export class AppComponent implements AfterViewInit {
   public logLines = [];
   public ipAddress = '';
   public points = [];
+  public maxDistance = 0;
+  public startAngle = 0;
   public stagedPoints = [];
 
   public unsafePublish(topic: string, message: string): void {
@@ -43,13 +45,21 @@ export class AppComponent implements AfterViewInit {
       this.mqttService
         .observe(id + 'stats/lidar')
         .subscribe((message: IMqttMessage) => {
+          // Message: ["datetime", "newValue", "quality", "angle", "distance"]
           let messageLine = message.payload.toString().split(',');
+          let distance = Number.parseFloat(messageLine[4]) / 10000;
+          if (distance > this.maxDistance) {
+            this.maxDistance = distance;
+          }
+          let angle = Number.parseFloat(messageLine[3]);
           this.stagedPoints.push([
-            Number.parseFloat(messageLine[2]) * (Math.PI / 180),
-            Number.parseFloat(messageLine[3]) / 10000,
+            // Convert angle to radian
+            angle * (Math.PI / 180),
+            // Scale distance on scale 0 to 1
+            distance,
           ]);
 
-          if (this.stagedPoints.length >= 600) {
+          if (angle <= 2 && this.stagedPoints.length > 15) {
             this.points = this.stagedPoints;
             this.stagedPoints = [];
           }
