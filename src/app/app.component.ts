@@ -49,7 +49,7 @@ export class AppComponent implements AfterViewInit {
             Number.parseFloat(messageLine[3]) / 10000,
           ]);
 
-          if (this.points.length >= 600) {
+          if (this.stagedPoints.length >= 600) {
             this.points = this.stagedPoints;
             this.stagedPoints = [];
           }

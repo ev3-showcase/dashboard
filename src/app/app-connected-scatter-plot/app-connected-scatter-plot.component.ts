@@ -15,14 +15,16 @@ import { scaleLinear } from 'd3';
 })
 export class ConnectedScatterPlotComponent implements AfterViewInit, OnChanges {
   @Input()
-  points: any;
+  points: any[];
   svg = null;
-  width = 300;
-  height = 300;
+  width = 500;
+  height = 500;
   radius = Math.min(this.width, this.height) / 2 - 30;
   constructor() {}
   ngOnChanges(changes: SimpleChanges): void {
-    this.updateGraph();
+    if (this.svg) {
+      this.updateGraph();
+    }
   }
 
   ngAfterViewInit(): void {
@@ -56,7 +58,10 @@ export class ConnectedScatterPlotComponent implements AfterViewInit, OnChanges {
       .data(r.ticks(3).slice(1))
       .enter()
       .append('g');
-    gr.append('circle').attr('r', r);
+    gr.append('circle')
+      .attr('r', r)
+      .style('stroke', 'blue')
+      .style('fill', 'none');
     var ga = this.svg
       .append('g')
       .attr('class', 'a axis')
@@ -66,7 +71,9 @@ export class ConnectedScatterPlotComponent implements AfterViewInit, OnChanges {
       .append('g')
       .attr('transform', function (d) {
         return 'rotate(' + -d + ')';
-      });
+      })
+      .style('stroke', 'blue')
+      .style('fill', 'none');
     ga.append('line').attr('x2', this.radius);
     var color = d3.scaleOrdinal(d3.schemeCategory10);
     var line = d3
@@ -80,7 +87,7 @@ export class ConnectedScatterPlotComponent implements AfterViewInit, OnChanges {
   }
 
   updateGraph() {
-    this.svg.selectAll('circle').remove();
+    this.svg.selectAll('point').remove();
     var r = scaleLinear().domain([0, 1]).range([0, this.radius]);
 
     this.svg
@@ -98,6 +105,6 @@ export class ConnectedScatterPlotComponent implements AfterViewInit, OnChanges {
         return 'translate(' + [x, y] + ')';
       })
       .attr('r', 2)
-      .attr('fill', 'grey');
+      .attr('fill', 'black');
   }
 }
