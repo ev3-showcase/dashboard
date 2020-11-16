@@ -1,5 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { ActivatedRouteSnapshot } from '@angular/router';
+import { Navigate, RouterNavigation } from '@ngxs/router-plugin';
+import {
+  Action,
+  Actions,
+  ofActionSuccessful,
+  Selector,
+  State,
+  StateContext,
+  Store,
+} from '@ngxs/store';
 import { LogLine } from 'src/app/helper';
 
 export class SetDevice {
@@ -30,9 +40,27 @@ export interface AppStateModel {
 })
 @Injectable()
 export class AppState {
+  constructor(private store: Store, private actions$: Actions) {
+    this.actions$
+      .pipe(ofActionSuccessful(RouterNavigation))
+      .subscribe((routeInfo) => {
+        const routeSnapshot: ActivatedRouteSnapshot =
+          routeInfo.routerState.root;
+        const pathSegment = routeSnapshot;
+        if (pathSegment != null) {
+          let device =
+            pathSegment.queryParamMap.get('device') || DeviceEnum.carCloudhub;
+          this.store.dispatch(new SetDevice(device as any));
+        }
+      });
+  }
   @Selector()
   static state(state: AppStateModel) {
     return state;
+  }
+  @Selector()
+  static device(state: AppStateModel) {
+    return state.device;
   }
   @Action(SetDevice)
   setDevice(ctx: StateContext<AppStateModel>, action: SetDevice) {
@@ -41,6 +69,13 @@ export class AppState {
       ...state,
       device: action.device,
     });
+    const params: { [key: string]: string | null } = {};
+    params.device = this.store.selectSnapshot(AppState.device);
+    return this.store.dispatch(
+      new Navigate([''], params, {
+        queryParamsHandling: 'merge',
+      })
+    );
   }
 
   @Action(AppendLog)

@@ -1,9 +1,9 @@
 <button mat-raised-button [matMenuTriggerFor]="menu">
-    {{selectedDeviceId}}
+    {{selectedDeviceId | async}}
 </button>
 <mat-menu #menu="matMenu">
     <button mat-menu-item *ngFor="let option of deviceList" (click)="selectChanged(option)"
-        [disabled]="selectedDeviceId === option">
+        [disabled]="(selectedDeviceId | async)=== option ">
         <span>
             {{option}}
         </span>

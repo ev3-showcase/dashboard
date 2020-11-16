@@ -19,6 +19,7 @@ export class AppComponent implements AfterViewInit {
   public maxDistance = 0;
   public startAngle = 0;
   public stagedPoints = [];
+  public firstTime = true;
 
   public unsafePublish(topic: string, message: string): void {
     this.mqttService.unsafePublish(topic, message, { qos: 1, retain: true });
@@ -46,13 +47,13 @@ export class AppComponent implements AfterViewInit {
       this.mqttService
         .observe(id + 'stats/lidar')
         .subscribe((message: IMqttMessage) => {
-          // Message: ["datetime", "newValue", "quality", "angle", "distance"]
+          // Message: ["newValue", "quality", "angle", "distance"]
           let messageLine = message.payload.toString().split(',');
-          let distance = Number.parseFloat(messageLine[4]) / 10000;
+          let distance = Number.parseFloat(messageLine[3]) / 10000;
           if (distance > this.maxDistance) {
             this.maxDistance = distance;
           }
-          let angle = Number.parseFloat(messageLine[3]);
+          let angle = Number.parseFloat(messageLine[2]);
           this.stagedPoints.push([
             // Convert angle to radian
             angle * (Math.PI / 180),
@@ -60,7 +61,7 @@ export class AppComponent implements AfterViewInit {
             distance,
           ]);
 
-          if (angle <= 2 && this.stagedPoints.length > 15) {
+          if (this.stagedPoints.length > 600) {
             this.points = this.stagedPoints;
             this.stagedPoints = [];
           }
@@ -70,11 +71,15 @@ export class AppComponent implements AfterViewInit {
     this.mqttService
       .observe(id + 'stats/log')
       .subscribe((message: IMqttMessage) => {
-        let line = message.payload.toString().split(',');
-        console.log(line);
-        this.logLines.push(line);
-        this.store.dispatch(new AppendLog(converLogLine(line)));
-        if (this.logLines.length > 60) [this.logLines.shift()];
+        if (this.firstTime) {
+          this.firstTime = false;
+        } else {
+          let line = message.payload.toString().split(',');
+          console.log(line);
+          this.logLines.push(line);
+          this.store.dispatch(new AppendLog(converLogLine(line)));
+          if (this.logLines.length > 60) [this.logLines.shift()];
+        }
       });
 
     this.mqttService
@@ -86,5 +91,8 @@ export class AppComponent implements AfterViewInit {
   constructor(private mqttService: MqttService, private store: Store) {}
   ngAfterViewInit(): void {
     this.subscribeToDevice(this.store.selectSnapshot(AppState.state).device);
+    this.store.select(AppState.device).subscribe((device) => {
+      this.subscribeToDevice(device);
+    });
   }
 }

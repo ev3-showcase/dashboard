@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
 import { AppState, DeviceEnum, SetDevice } from 'src/app/state/app.state';
 
 @Component({
@@ -9,15 +10,13 @@ import { AppState, DeviceEnum, SetDevice } from 'src/app/state/app.state';
 })
 export class DeviceSelectorComponent implements OnInit {
   public deviceList = Object.values(DeviceEnum);
-  public selectedDeviceId = null;
+  @Select(AppState.device)
+  public selectedDeviceId: Observable<string>;
 
-  constructor(public store: Store) {
-    this.selectedDeviceId = this.store.selectSnapshot(AppState.state).device;
-  }
+  constructor(public store: Store) {}
 
   public selectChanged(device: DeviceEnum) {
     this.store.dispatch(new SetDevice(device));
-    this.selectedDeviceId = device;
   }
 
   ngOnInit(): void {}
