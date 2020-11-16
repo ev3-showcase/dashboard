@@ -65,6 +65,9 @@ export class AppState {
   @Action(SetDevice)
   setDevice(ctx: StateContext<AppStateModel>, action: SetDevice) {
     const state = ctx.getState();
+    if (state.device === action.device) {
+      return;
+    }
     ctx.setState({
       ...state,
       device: action.device,
