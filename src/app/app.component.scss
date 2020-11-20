@@ -16,11 +16,17 @@
   }
 }
 
-mat-grid-list {
-  width: 100%;
-}
-
-.mat-card {
-  width: 90%;
-  height: 90%;
+#dashboard {
+  display: flex;
+  align-content: flex-start;
+  flex-flow: column wrap;
+  flex-direction: row;
+  width: 100vw;
+  flex: 1;
+  .tile {
+    flex-grow: 1;
+    display: flex;
+    flex: 1;
+    margin: 6px;
+  }
 }

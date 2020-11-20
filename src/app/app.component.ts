@@ -78,7 +78,7 @@ export class AppComponent implements AfterViewInit {
           console.log(line);
           this.logLines.push(line);
           this.store.dispatch(new AppendLog(converLogLine(line)));
-          if (this.logLines.length > 60) [this.logLines.shift()];
+          if (this.logLines.length > 20) [this.logLines.shift()];
         }
       });
 
