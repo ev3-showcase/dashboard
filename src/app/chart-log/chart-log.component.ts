@@ -18,7 +18,7 @@ export class ChartLogComponent implements OnInit {
           name: 'CPU',
           series: state.log.map((l: LogLine) => {
             return {
-              name: l.datetime.getUTCMilliseconds(),
+              name: l.datetime.toISOString(),
               value: 100 - l.cpu_stat_percent,
             };
           }),
@@ -27,7 +27,7 @@ export class ChartLogComponent implements OnInit {
           name: 'Memory',
           series: state.log.map((l: LogLine) => {
             return {
-              name: l.datetime.getUTCMilliseconds(),
+              name: l.datetime.toISOString(),
               value: l.mem_stat_used / l.mem_stat_total,
             };
           }),
@@ -65,5 +65,20 @@ export class ChartLogComponent implements OnInit {
 
   onDeactivate(data): void {
     console.log('Deactivate', JSON.parse(JSON.stringify(data)));
+  }
+
+  tickFormatting(value): string {
+    console.log(value);
+    const date = new Date(value);
+    const newDate = new Date(
+      date.getTime() + date.getTimezoneOffset() * 60 * 1000
+    );
+
+    const offset = date.getTimezoneOffset() / 60;
+    const hours = date.getHours();
+
+    newDate.setHours(hours - offset);
+
+    return newDate.toLocaleString();
   }
 }

@@ -19,7 +19,7 @@ export class AppComponent implements AfterViewInit {
   public maxDistance = 0;
   public startAngle = 0;
   public stagedPoints = [];
-  public firstTime = true;
+  public ignoreFirstMessageCounter = 0;
 
   public unsafePublish(topic: string, message: string): void {
     this.mqttService.unsafePublish(topic, message, { qos: 1, retain: true });
@@ -71,8 +71,8 @@ export class AppComponent implements AfterViewInit {
     this.mqttService
       .observe(id + 'stats/log')
       .subscribe((message: IMqttMessage) => {
-        if (this.firstTime) {
-          this.firstTime = false;
+        if (this.ignoreFirstMessageCounter < 3) {
+          this.ignoreFirstMessageCounter++;
         } else {
           let line = message.payload.toString().split(',');
           console.log(line);
