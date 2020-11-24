@@ -11,8 +11,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: 80px;
   img {
-    margin: 10px;
+    margin: 16px;
   }
 }
 
@@ -25,8 +26,24 @@
   flex: 1;
   .tile {
     flex-grow: 1;
+    flex-direction: column;
     display: flex;
     flex: 1;
     margin: 6px;
+    max-height: 45vh;
+    mat-card-content {
+      display: flex;
+      flex: 1;
+      overflow: auto;
+    }
+  }
+
+  .centered {
+    mat-card-content {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+    }
   }
 }
