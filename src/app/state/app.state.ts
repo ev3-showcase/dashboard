@@ -67,6 +67,10 @@ export class AppState {
   static device(state: AppStateModel) {
     return state.device;
   }
+  @Selector()
+  static log(state: AppStateModel) {
+    return state.log;
+  }
   @Action(SetDevice)
   setDevice(ctx: StateContext<AppStateModel>, action: SetDevice) {
     const state = ctx.getState();
@@ -89,6 +93,7 @@ export class AppState {
   @Action(AppendLog)
   appendLog(ctx: StateContext<AppStateModel>, action: AppendLog) {
     const state = ctx.getState();
+    if (state.log.length > 20) [state.log.shift()];
     ctx.setState({
       ...state,
       log: [...state.log, action.logLine],

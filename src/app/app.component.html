@@ -21,15 +21,13 @@
     <mat-card class="tile">
         <mat-card-title>Video</mat-card-title>
         <mat-card-content>
-            <app-video-player [carId]="$deviceId | async"></app-video-player>
+            <app-video-player></app-video-player>
         </mat-card-content>
     </mat-card>
     <mat-card class="tile">
         <mat-card-title>Log</mat-card-title>
         <mat-card-content>
-            <div style="overflow-y: auto;">
-                <div *ngFor="let logLine of logLines">{{logLine}}</div>
-            </div>
+            <app-log-stream></app-log-stream>
         </mat-card-content>
     </mat-card>
     <mat-card class="tile centered">

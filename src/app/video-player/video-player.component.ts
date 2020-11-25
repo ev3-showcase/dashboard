@@ -1,12 +1,8 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Input,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Select, Store } from '@ngxs/store';
 import * as flvjs from 'flv.js';
+import { Observable } from 'rxjs';
+import { AppState, DeviceEnum } from 'src/app/state/app.state';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -17,21 +13,18 @@ import { environment } from 'src/environments/environment';
 export class VideoPlayerComponent implements AfterViewInit {
   @ViewChild('video') videoRef: ElementRef;
 
-  @Input() carId = 'car-cloudhub';
+  @Select(AppState.device) deviceId: Observable<DeviceEnum>;
+
   public flvPlayer;
 
-  constructor() {}
+  constructor(private store: Store) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.loadStream();
-  }
-
-  loadStream() {
+  loadStream(id: string) {
     if (flvjs.default.isSupported()) {
       this.flvPlayer = flvjs.default.createPlayer({
         type: 'flv',
         isLive: true,
-        url: environment.video_api + this.carId + '.flv',
+        url: environment.video_api + id + '.flv',
       });
       this.flvPlayer.attachMediaElement(this.videoRef.nativeElement);
       this.flvPlayer.load();
@@ -41,6 +34,8 @@ export class VideoPlayerComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.loadStream();
+    this.deviceId.subscribe((id) => {
+      this.loadStream(id);
+    });
   }
 }

@@ -1,5 +1,7 @@
-export function converLogLine(l: any[]) {
+export function converLogLine(str: string) {
+  let l = str.split(',');
   return {
+    original: str,
     datetime: new Date(Number(l[0]) * 1000),
     cpu_stat_processes: Number(l[1]),
     cpu_stat_percent: Number(l[2]),
@@ -21,6 +23,7 @@ export function converLogLine(l: any[]) {
 }
 
 export interface LogLine {
+  original: string;
   datetime: Date;
   cpu_stat_processes: number;
   cpu_stat_percent: number;

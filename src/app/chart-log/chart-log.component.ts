@@ -68,7 +68,6 @@ export class ChartLogComponent implements OnInit {
   }
 
   tickFormatting(value): string {
-    console.log(value);
     const date = new Date(value);
     const newDate = new Date(
       date.getTime() + date.getTimezoneOffset() * 60 * 1000

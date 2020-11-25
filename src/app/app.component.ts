@@ -19,14 +19,12 @@ import {
 export class AppComponent implements AfterViewInit {
   private cancelSubscriptions$ = new Subject();
   public message: string;
-  public logLines = [];
   public ipAddress = '';
   public points = [];
   public maxDistance = 0;
-  public startAngle = 0;
   public stagedPoints = [];
   public ignoreFirstMessageCounter = 0;
-  @Select(AppState.device) $deviceId: Observable<DeviceEnum>;
+  @Select(AppState.device) deviceId: Observable<DeviceEnum>;
 
   public unsafePublish(topic: string, message: string): void {
     this.mqttService.unsafePublish(topic, message, { qos: 1, retain: true });
@@ -44,7 +42,6 @@ export class AppComponent implements AfterViewInit {
   }
 
   public reset() {
-    this.logLines = [];
     this.points = [];
     this.ipAddress = '-';
     this.store.dispatch(new ResetLog());
@@ -89,11 +86,9 @@ export class AppComponent implements AfterViewInit {
         if (this.ignoreFirstMessageCounter < 3) {
           this.ignoreFirstMessageCounter++;
         } else {
-          let line = message.payload.toString().split(',');
-          console.log(line);
-          this.logLines.push(line);
-          this.store.dispatch(new AppendLog(converLogLine(line)));
-          if (this.logLines.length > 20) [this.logLines.shift()];
+          this.store.dispatch(
+            new AppendLog(converLogLine(message.payload.toString()))
+          );
         }
       });
 
@@ -107,7 +102,7 @@ export class AppComponent implements AfterViewInit {
   constructor(private mqttService: MqttService, private store: Store) {}
   ngAfterViewInit(): void {
     this.subscribeToDevice(this.store.selectSnapshot(AppState.state).device);
-    this.store.select(AppState.device).subscribe((device) => {
+    this.deviceId.subscribe((device) => {
       this.subscribeToDevice(device);
     });
   }
