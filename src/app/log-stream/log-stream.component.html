@@ -1,3 +1,4 @@
 <div style="overflow-y: auto;">
     <div *ngFor="let logLine of (logLines | async)">{{logLine.original}}</div>
+    <div *ngIf="(logLines | async).length == 0"> Waiting for data...</div>
 </div>

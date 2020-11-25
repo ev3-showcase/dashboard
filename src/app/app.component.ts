@@ -2,7 +2,7 @@ import { AfterViewInit, Component } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { IMqttMessage, MqttService } from 'ngx-mqtt';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { skip, takeUntil } from 'rxjs/operators';
 import { converLogLine } from 'src/app/helper';
 import {
   AppendLog,
@@ -101,8 +101,7 @@ export class AppComponent implements AfterViewInit {
   }
   constructor(private mqttService: MqttService, private store: Store) {}
   ngAfterViewInit(): void {
-    this.subscribeToDevice(this.store.selectSnapshot(AppState.state).device);
-    this.deviceId.subscribe((device) => {
+    this.deviceId.pipe(skip(1)).subscribe((device) => {
       this.subscribeToDevice(device);
     });
   }
