@@ -21,7 +21,7 @@
     <mat-card class="tile">
         <mat-card-title>Video</mat-card-title>
         <mat-card-content>
-            <app-video-player></app-video-player>
+            <app-video-player [carId]="$deviceId | async"></app-video-player>
         </mat-card-content>
     </mat-card>
     <mat-card class="tile">

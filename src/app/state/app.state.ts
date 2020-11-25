@@ -21,6 +21,11 @@ export class AppendLog {
   static readonly type = '[App] AppendLog';
   constructor(public logLine: LogLine) {}
 }
+
+export class ResetLog {
+  static readonly type = '[App] ResetLog';
+}
+
 export enum DeviceEnum {
   carBdsp = 'car-bdsp',
   carCloudhub = 'car-cloudhub',
@@ -87,6 +92,15 @@ export class AppState {
     ctx.setState({
       ...state,
       log: [...state.log, action.logLine],
+    });
+  }
+
+  @Action(ResetLog)
+  resetLog(ctx: StateContext<AppStateModel>) {
+    const state = ctx.getState();
+    ctx.setState({
+      ...state,
+      log: [],
     });
   }
 }

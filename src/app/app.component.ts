@@ -1,9 +1,15 @@
 import { AfterViewInit, Component } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { IMqttMessage, MqttService } from 'ngx-mqtt';
-import { Subscription } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { converLogLine } from 'src/app/helper';
-import { AppendLog, AppState } from 'src/app/state/app.state';
+import {
+  AppendLog,
+  AppState,
+  DeviceEnum,
+  ResetLog,
+} from 'src/app/state/app.state';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +17,7 @@ import { AppendLog, AppState } from 'src/app/state/app.state';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements AfterViewInit {
-  private subscriptions: Subscription[] = [];
+  private cancelSubscriptions$ = new Subject();
   public message: string;
   public logLines = [];
   public ipAddress = '';
@@ -20,6 +26,7 @@ export class AppComponent implements AfterViewInit {
   public startAngle = 0;
   public stagedPoints = [];
   public ignoreFirstMessageCounter = 0;
+  @Select(AppState.device) $deviceId: Observable<DeviceEnum>;
 
   public unsafePublish(topic: string, message: string): void {
     this.mqttService.unsafePublish(topic, message, { qos: 1, retain: true });
@@ -30,9 +37,17 @@ export class AppComponent implements AfterViewInit {
   }
 
   public unsubscribe() {
-    this.subscriptions.forEach((element) => {
-      element.unsubscribe();
-    });
+    this.cancelSubscriptions$.next();
+    this.cancelSubscriptions$.complete();
+    this.cancelSubscriptions$ = new Subject();
+    this.reset();
+  }
+
+  public reset() {
+    this.logLines = [];
+    this.points = [];
+    this.ipAddress = '-';
+    this.store.dispatch(new ResetLog());
   }
 
   public subscribeToDevice(id?: string) {
@@ -43,33 +58,33 @@ export class AppComponent implements AfterViewInit {
       id = '';
     }
 
-    this.subscriptions.push(
-      this.mqttService
-        .observe(id + 'stats/lidar')
-        .subscribe((message: IMqttMessage) => {
-          // Message: ["newValue", "quality", "angle", "distance"]
-          let messageLine = message.payload.toString().split(',');
-          let distance = Number.parseFloat(messageLine[3]) / 10000;
-          if (distance > this.maxDistance) {
-            this.maxDistance = distance;
-          }
-          let angle = Number.parseFloat(messageLine[2]);
-          this.stagedPoints.push([
-            // Convert angle to radian
-            angle * (Math.PI / 180),
-            // Scale distance on scale 0 to 1
-            distance,
-          ]);
+    this.mqttService
+      .observe(id + 'stats/lidar')
+      .pipe(takeUntil(this.cancelSubscriptions$))
+      .subscribe((message: IMqttMessage) => {
+        // Message: ["newValue", "quality", "angle", "distance"]
+        let messageLine = message.payload.toString().split(',');
+        let distance = Number.parseFloat(messageLine[3]) / 10000;
+        if (distance > this.maxDistance) {
+          this.maxDistance = distance;
+        }
+        let angle = Number.parseFloat(messageLine[2]);
+        this.stagedPoints.push([
+          // Convert angle to radian
+          angle * (Math.PI / 180),
+          // Scale distance on scale 0 to 1
+          distance,
+        ]);
 
-          if (this.stagedPoints.length > 600) {
-            this.points = this.stagedPoints;
-            this.stagedPoints = [];
-          }
-        })
-    );
+        if (this.stagedPoints.length > 600) {
+          this.points = this.stagedPoints;
+          this.stagedPoints = [];
+        }
+      });
 
     this.mqttService
       .observe(id + 'stats/log')
+      .pipe(takeUntil(this.cancelSubscriptions$))
       .subscribe((message: IMqttMessage) => {
         if (this.ignoreFirstMessageCounter < 3) {
           this.ignoreFirstMessageCounter++;
@@ -84,6 +99,7 @@ export class AppComponent implements AfterViewInit {
 
     this.mqttService
       .observe(id + 'admin/ip')
+      .pipe(takeUntil(this.cancelSubscriptions$))
       .subscribe((message: IMqttMessage) => {
         this.ipAddress = message.payload.toString();
       });

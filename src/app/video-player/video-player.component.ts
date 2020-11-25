@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import * as flvjs from 'flv.js';
 import { environment } from 'src/environments/environment';
 
@@ -9,21 +16,31 @@ import { environment } from 'src/environments/environment';
 })
 export class VideoPlayerComponent implements AfterViewInit {
   @ViewChild('video') videoRef: ElementRef;
+
+  @Input() carId = 'car-cloudhub';
   public flvPlayer;
 
   constructor() {}
 
-  ngAfterViewInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    this.loadStream();
+  }
+
+  loadStream() {
     if (flvjs.default.isSupported()) {
       this.flvPlayer = flvjs.default.createPlayer({
         type: 'flv',
         isLive: true,
-        url: environment.video_api + 'car-cloudhub.flv',
+        url: environment.video_api + this.carId + '.flv',
       });
       this.flvPlayer.attachMediaElement(this.videoRef.nativeElement);
       this.flvPlayer.load();
       this.flvPlayer.volume = 0;
       this.flvPlayer.play();
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.loadStream();
   }
 }
