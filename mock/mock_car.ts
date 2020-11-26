@@ -40,7 +40,7 @@ function mockLidar() {
         (line as string).replace(/[\[\]\"]/g, ''),
         {
           qos: 1,
-          retain: true,
+          retain: false,
         }
       );
     }
@@ -74,7 +74,7 @@ function mockSensor() {
     if (mockSensorCount != 0) {
       client.publish('car-cloudhub/stats/log', line, {
         qos: 1,
-        retain: true,
+        retain: false,
       });
     }
     mockSensorCount++;
