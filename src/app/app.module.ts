@@ -23,6 +23,7 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
   port: 443,
   path: '/mqtt',
   protocol: 'wss',
+  clientId: 'dashboard' + Math.random().toString(16).substr(2, 8),
 };
 
 @NgModule({
