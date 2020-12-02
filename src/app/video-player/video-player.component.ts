@@ -2,7 +2,6 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import * as flvjs from 'flv.js';
 import { Observable } from 'rxjs';
-import { skip } from 'rxjs/operators';
 import { AppState, DeviceEnum } from 'src/app/state/app.state';
 import { environment } from 'src/environments/environment';
 
@@ -35,7 +34,7 @@ export class VideoPlayerComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.deviceId.pipe(skip(1)).subscribe((id) => {
+    this.deviceId.subscribe((id) => {
       this.loadStream(id);
     });
   }

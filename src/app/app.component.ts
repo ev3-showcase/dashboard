@@ -2,7 +2,7 @@ import { AfterViewInit, Component } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { IMqttMessage, MqttService } from 'ngx-mqtt';
 import { Observable, Subject } from 'rxjs';
-import { skip, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { converLogLine } from 'src/app/helper';
 import {
   AppendLog,
@@ -19,7 +19,7 @@ import {
 export class AppComponent implements AfterViewInit {
   private cancelSubscriptions$ = new Subject();
   public message: string;
-  public ipAddress = '';
+  public ipAddress = '-';
   public points = [];
   public maxDistance = 0;
   public stagedPoints = [];
@@ -73,7 +73,7 @@ export class AppComponent implements AfterViewInit {
           distance,
         ]);
 
-        if (this.stagedPoints.length > 600) {
+        if (this.stagedPoints.length > 700) {
           this.points = this.stagedPoints;
           this.stagedPoints = [];
         }
@@ -101,7 +101,7 @@ export class AppComponent implements AfterViewInit {
   }
   constructor(private mqttService: MqttService, private store: Store) {}
   ngAfterViewInit(): void {
-    this.deviceId.pipe(skip(1)).subscribe((device) => {
+    this.deviceId.subscribe((device) => {
       this.subscribeToDevice(device);
     });
   }
