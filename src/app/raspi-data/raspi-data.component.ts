@@ -4,31 +4,31 @@ import { LogLine } from 'src/app/helper';
 import { AppState } from 'src/app/state/app.state';
 
 @Component({
-  selector: 'app-chart-log',
-  templateUrl: './chart-log.component.html',
-  styleUrls: ['./chart-log.component.scss'],
+  selector: 'app-raspi-data',
+  templateUrl: './raspi-data.component.html',
+  styleUrls: ['./raspi-data.component.scss'],
 })
-export class ChartLogComponent implements OnInit {
+export class RaspiDataComponent implements OnInit {
   ngOnInit(): void {}
 
   constructor(private store: Store) {
     this.store.select(AppState).subscribe((state) => {
       this.multi = [
         {
-          name: 'Gyro Angle',
+          name: 'CPU',
           series: state.log.map((l: LogLine) => {
             return {
               name: l.datetime.toISOString(),
-              value: l.gyro_angle,
+              value: 100 - l.cpu_stat_percent,
             };
           }),
         },
         {
-          name: 'Gyrp Rate',
+          name: 'Memory',
           series: state.log.map((l: LogLine) => {
             return {
               name: l.datetime.toISOString(),
-              value: l.gyro_rate,
+              value: l.mem_stat_used / l.mem_stat_total,
             };
           }),
         },

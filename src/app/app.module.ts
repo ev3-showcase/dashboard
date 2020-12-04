@@ -18,6 +18,9 @@ import { ChartLogComponent } from './chart-log/chart-log.component';
 import { DeviceSelectorComponent } from './device-selector/device-selector.component';
 import { LogStreamComponent } from './log-stream/log-stream.component';
 import { RoundtripComponent } from './roundtrip/roundtrip.component';
+import { RaspiDataComponent } from './raspi-data/raspi-data.component';
+import { MotorDataComponent } from './motor-data/motor-data.component';
+import { UltransicDataComponent } from './ultransic-data/ultransic-data.component';
 export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
   hostname: environment.mqtt_hostname,
   port: 443,
@@ -35,6 +38,9 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     DeviceSelectorComponent,
     LogStreamComponent,
     ChartLogComponent,
+    RaspiDataComponent,
+    MotorDataComponent,
+    UltransicDataComponent,
   ],
   imports: [
     BrowserModule,

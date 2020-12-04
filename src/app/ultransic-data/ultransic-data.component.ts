@@ -4,31 +4,22 @@ import { LogLine } from 'src/app/helper';
 import { AppState } from 'src/app/state/app.state';
 
 @Component({
-  selector: 'app-chart-log',
-  templateUrl: './chart-log.component.html',
-  styleUrls: ['./chart-log.component.scss'],
+  selector: 'app-ultransic-data',
+  templateUrl: './ultransic-data.component.html',
+  styleUrls: ['./ultransic-data.component.scss'],
 })
-export class ChartLogComponent implements OnInit {
+export class UltransicDataComponent implements OnInit {
   ngOnInit(): void {}
 
   constructor(private store: Store) {
     this.store.select(AppState).subscribe((state) => {
       this.multi = [
         {
-          name: 'Gyro Angle',
+          name: 'Ultransonic',
           series: state.log.map((l: LogLine) => {
             return {
               name: l.datetime.toISOString(),
-              value: l.gyro_angle,
-            };
-          }),
-        },
-        {
-          name: 'Gyrp Rate',
-          series: state.log.map((l: LogLine) => {
-            return {
-              name: l.datetime.toISOString(),
-              value: l.gyro_rate,
+              value: l.ultransonic,
             };
           }),
         },

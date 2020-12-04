@@ -4,31 +4,69 @@ import { LogLine } from 'src/app/helper';
 import { AppState } from 'src/app/state/app.state';
 
 @Component({
-  selector: 'app-chart-log',
-  templateUrl: './chart-log.component.html',
-  styleUrls: ['./chart-log.component.scss'],
+  selector: 'app-motor-data',
+  templateUrl: './motor-data.component.html',
+  styleUrls: ['./motor-data.component.scss'],
 })
-export class ChartLogComponent implements OnInit {
+export class MotorDataComponent implements OnInit {
   ngOnInit(): void {}
 
   constructor(private store: Store) {
     this.store.select(AppState).subscribe((state) => {
-      this.multi = [
+      this.multi_duty = [
         {
-          name: 'Gyro Angle',
+          name: 'Motor Main Left Duty Cycle',
           series: state.log.map((l: LogLine) => {
             return {
               name: l.datetime.toISOString(),
-              value: l.gyro_angle,
+              value: l.motor_main_l_duty_cycle,
             };
           }),
         },
         {
-          name: 'Gyrp Rate',
+          name: 'Motor Main Right Duty Cycle',
           series: state.log.map((l: LogLine) => {
             return {
               name: l.datetime.toISOString(),
-              value: l.gyro_rate,
+              value: l.motor_main_r_duty_cycle,
+            };
+          }),
+        },
+        {
+          name: 'Steering Duty Cycle',
+          series: state.log.map((l: LogLine) => {
+            return {
+              name: l.datetime.toISOString(),
+              value: l.motor_steering_duty_cylce,
+            };
+          }),
+        },
+      ];
+      this.multi = [
+        {
+          name: 'Motor Main Left Positon',
+          series: state.log.map((l: LogLine) => {
+            return {
+              name: l.datetime.toISOString(),
+              value: l.motor_main_l_position,
+            };
+          }),
+        },
+        {
+          name: 'Motor Main Right Position',
+          series: state.log.map((l: LogLine) => {
+            return {
+              name: l.datetime.toISOString(),
+              value: l.motor_main_r_position,
+            };
+          }),
+        },
+        {
+          name: 'Steering Position',
+          series: state.log.map((l: LogLine) => {
+            return {
+              name: l.datetime.toISOString(),
+              value: l.motor_steering_position,
             };
           }),
         },
@@ -37,6 +75,7 @@ export class ChartLogComponent implements OnInit {
   }
 
   multi: any[] = [];
+  multi_duty: any[] = [];
   view: any[] = [700, 300];
 
   // options
@@ -48,7 +87,7 @@ export class ChartLogComponent implements OnInit {
   showYAxisLabel: boolean = true;
   showXAxisLabel: boolean = true;
   xAxisLabel: string = 'Time';
-  yAxisLabel: string = 'Percent';
+  yAxisLabel: string = '';
   timeline: boolean = true;
 
   colorScheme = {

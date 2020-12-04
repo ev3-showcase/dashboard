@@ -93,10 +93,17 @@ export class AppState {
   @Action(AppendLog)
   appendLog(ctx: StateContext<AppStateModel>, action: AppendLog) {
     const state = ctx.getState();
-    ctx.setState({
-      ...state,
-      log: [...state.log.slice(0, 20), action.logLine],
-    });
+    if (state.log.length > 20) {
+      ctx.setState({
+        ...state,
+        log: [...state.log.slice(1, 20), action.logLine],
+      });
+    } else {
+      ctx.setState({
+        ...state,
+        log: [...state.log, action.logLine],
+      });
+    }
   }
 
   @Action(ResetLog)
