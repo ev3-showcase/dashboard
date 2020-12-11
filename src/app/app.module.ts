@@ -21,6 +21,7 @@ import { RoundtripComponent } from './roundtrip/roundtrip.component';
 import { RaspiDataComponent } from './raspi-data/raspi-data.component';
 import { MotorDataComponent } from './motor-data/motor-data.component';
 import { UltransicDataComponent } from './ultransic-data/ultransic-data.component';
+import { SteeringDataComponent } from './steering-data/steering-data.component';
 export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
   hostname: environment.mqtt_hostname,
   port: 443,
@@ -41,6 +42,7 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     RaspiDataComponent,
     MotorDataComponent,
     UltransicDataComponent,
+    SteeringDataComponent,
   ],
   imports: [
     BrowserModule,

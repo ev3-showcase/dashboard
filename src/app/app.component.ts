@@ -73,7 +73,7 @@ export class AppComponent implements AfterViewInit {
           distance,
         ]);
 
-        if (this.stagedPoints.length > 700) {
+        if (this.stagedPoints.length > 1200) {
           this.points = this.stagedPoints;
           this.stagedPoints = [];
         }
